@@ -41,10 +41,21 @@ cd "${MY_DIR}"
 
 # start the remote runner
 echo "Now starting the remote runner"
-node remote_runner.js
-exit_code=$?
+failed=0
+node remote_runner.js || failed=1
 
 kill $(cat /tmp/sauce.pid)
 kill $ep_pid
 
-exit $exit_code
+cd "${MY_DIR}/../../../"
+# print the start of every minified file for debugging
+find var/ -type f -name "minified_*" -not -name "*.gz" |xargs head -n2
+
+# is any package minified twice and stored with a different file name?
+find var/ -type f -name "minified_*" -not -name "*.gz" |xargs md5sum|cut -d" " -f1|sort|uniq -c|egrep "^\W+2\W" >/dev/null
+if [ $? -eq 0 ]; then
+  echo "FAILED: a resource is packaged multiple times"
+  failed=1
+fi
+
+exit $failed
