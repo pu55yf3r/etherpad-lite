@@ -55,7 +55,7 @@ find var/ -type f -name "minified_*" -not -name "*.gz" |xargs head -n2
 find var/ -type f -name "minified_*" |xargs md5sum|cut -d" " -f1|sort|uniq -c|egrep "^\W+1\W" -v
 if [ $? -eq 0 ]; then
   echo "FAILED: a resource is packaged multiple times"
-  failed=1
+  failed=2
 fi
 
 exit $failed
