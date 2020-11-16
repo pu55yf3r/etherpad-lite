@@ -51,8 +51,8 @@ cd "${MY_DIR}/../../../"
 # print the start of every minified file for debugging
 find var/ -type f -name "minified_*" -not -name "*.gz" |xargs head -n2
 
-# is any package minified twice and stored with a different file name?
-find var/ -type f -name "minified_*" -not -name "*.gz" |xargs md5sum|cut -d" " -f1|sort|uniq -c|egrep "^\W+2\W" >/dev/null
+# is any package minified more than once?
+find var/ -type f -name "minified_*" |xargs md5sum|cut -d" " -f1|sort|uniq -c|egrep "^\W+1\W" -v
 if [ $? -eq 0 ]; then
   echo "FAILED: a resource is packaged multiple times"
   failed=1
