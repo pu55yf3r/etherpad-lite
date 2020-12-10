@@ -55,14 +55,12 @@ const init = () => {
       Cookies.set('token', token, {expires: 60});
     }
 
-    const loc = document.location;
-    // get the correct port
-    const port = loc.port === '' ? (loc.protocol === 'https:' ? 443 : 80) : loc.port;
-    // create the url
-    const url = `${loc.protocol}//${loc.hostname}:${port}/`;
-
-    // build up the socket io connection
-    window.socket = io.connect(url, {path: `${exports.baseURL}socket.io`});
+    // The io() function's API is awkward. The documentation says that the first argument is a URL,
+    // but it is not the URL of the socket.io endpoint. The URL's path part is used as the name of
+    // the socket.io namespace to join. To get the URL of the socket.io endpoint, replace the URL's
+    // path component with the `path` option (which defaults to '/socket.io', but is overridden here
+    // so that users can put Etherpad at something like '/etherpad').
+    window.socket = io('/', {path: `${exports.baseURL}socket.io`});
 
     // send the ready message once we're connected
     window.socket.on('connect', () => {
