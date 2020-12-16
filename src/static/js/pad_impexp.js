@@ -123,6 +123,7 @@ const padimpexp = (function () {
     }
   };
 
+  // used in tepmlates/pad.html
   const importSuccessful = (token) => {
     $.ajax(
         {
@@ -132,7 +133,7 @@ const padimpexp = (function () {
             token,
             padId: pad.getPadId(),
           },
-          success: importApplicationSuccessful,
+          success: importSuccessful,
           error: importApplicationFailed,
           timeout: 25000,
         });
