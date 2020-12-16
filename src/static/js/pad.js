@@ -776,8 +776,7 @@ const pad = {
   },
 };
 
-const alertBar = (function () {
-
+const alertBar = (() => {
   const arriveAtAnimationState = (state) => {
     if (state === -1) {
       $('#alertbar').css('opacity', 0).css('display', 'block');
@@ -803,7 +802,7 @@ const alertBar = (function () {
     },
   };
   return self;
-}());
+})();
 
 const init = () => pad.init();
 
