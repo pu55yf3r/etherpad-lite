@@ -289,6 +289,7 @@ const handshake = () => {
       receivedClientVars = true;
 
       // set some client vars
+      // JM TODO: clientVars is global and that's usually fine so what's the problem?
       clientVars = obj.data;
 
       // initalize the pad
@@ -424,8 +425,8 @@ const pad = {
     padutils.setupGlobalExceptionHandler();
 
     $(document).ready(() => {
-      // start the custom js
-      if (typeof customStart === 'function') customStart();
+      // start the custom js - customStart is defined in pad.html
+      if (typeof customStart === 'function') customStart(); // eslint-disable-line
       handshake();
 
       // To use etherpad you have to allow cookies.
@@ -629,17 +630,7 @@ const pad = {
     }
   },
   handleServerMessage: (m) => {
-    if (m.type === 'NOTICE') {
-      if (m.text) {
-        alertBar.displayMessage((abar) => {
-          abar.find('#servermsgdate').text(` (${padutils.simpleDateTime(new Date())})`);
-          abar.find('#servermsgtext').text(m.text);
-        });
-      }
-      if (m.js) {
-        window['ev' + 'al'](m.js);
-      }
-    } else if (m.type === 'GUEST_PROMPT') {
+    if (m.type === 'GUEST_PROMPT') {
       paduserlist.showGuestPrompt(m.userId, m.displayName);
     }
   },
@@ -731,9 +722,6 @@ const pad = {
       padeditbar.setSyncStatus('done');
     }
   },
-  hideServerMessage: () => {
-    alertBar.hideMessage();
-  },
   asyncSendDiagnosticInfo: () => {
     window.setTimeout(() => {
       $.ajax(
@@ -776,34 +764,6 @@ const pad = {
   },
 };
 
-const alertBar = (() => {
-  const arriveAtAnimationState = (state) => {
-    if (state === -1) {
-      $('#alertbar').css('opacity', 0).css('display', 'block');
-    } else if (state === 0) {
-      $('#alertbar').css('opacity', 1);
-    } else if (state === 1) {
-      $('#alertbar').css('opacity', 0).css('display', 'none');
-    } else if (state < 0) {
-      $('#alertbar').css('opacity', state + 1);
-    } else if (state > 0) {
-      $('#alertbar').css('opacity', 1 - state);
-    }
-    const animator = padutils.makeShowHideAnimator(arriveAtAnimationState, false, 25, 400);
-  };
-
-  const self = {
-    displayMessage: (setupFunc) => {
-      animator.show();
-      setupFunc($('#alertbar'));
-    },
-    hideMessage: () => {
-      animator.hide();
-    },
-  };
-  return self;
-})();
-
 const init = () => pad.init();
 
 const settings = {
@@ -824,4 +784,3 @@ exports.getUrlVars = getUrlVars;
 exports.handshake = handshake;
 exports.pad = pad;
 exports.init = init;
-exports.alertBar = alertBar;
