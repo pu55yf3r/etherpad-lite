@@ -579,33 +579,29 @@ const paduserlist = (function () {
       let box = $(`#guestprompt-${encodedUserId}`);
       if (box.length === 0) {
         // make guest prompt box
-        // TODO JM refactor.
         const guestPrompt = `<div id="${padutils.escapeHtml(`guestprompt-${encodedUserId}`)}"
             class="guestprompt">`;
-        box = $(`
-          ${guestPrompt}
-             <div class="choices">
-                <a href="${padutils.escapeHtml(
-      `javascript:void(require(${JSON.stringify(module.id)})
-                      .paduserlist.answerGuestPrompt(${JSON.stringify(encodedUserId)},false))`
-  )}">
-                  ${_('pad.userlist.deny')}
-                </a>
-                <a href="${padutils.escapeHtml(
-      `javascript:void(require(${JSON.stringify(module.id)})
-                    .paduserlist
-                    .answerGuestPrompt(
-                      ${JSON.stringify(encodedUserId)},true))`
-  )}">
-                    ${_('pad.userlist.approve')}
-                </a>
-              </div>
-              <div class="guestname">
-              <strong>${_('pad.userlist.guest')}:</strong>
-              ${padutils.escapeHtml(displayName)
-  }
-              </div>
-        </div>
+        const guestName = `<div class="guestname"><strong>${_('pad.userlist.guest')}:</strong>
+            ${padutils.escapeHtml(displayName)}</div>`;
+        const link = `${padutils.escapeHtml(
+            `javascript:void(require(${JSON.stringify(module.id)})
+              .paduserlist.answerGuestPrompt(${JSON.stringify(encodedUserId)},false))`)}`;
+        const linktwo = `${padutils.escapeHtml(
+            `javascript:void(require(${JSON.stringify(module.id)})
+            .paduserlist
+            .answerGuestPrompt(
+            ${JSON.stringify(encodedUserId)},true))`)}`;
+        box = $(`${guestPrompt}
+            <div class="choices">
+              <a href="${link}">
+                ${_('pad.userlist.deny')}
+              </a>
+              <a href="${linktwo}">
+                ${_('pad.userlist.approve')}
+              </a>
+            </div>
+          ${guestName}
+          </div>
         `);
         $('#guestprompts').append(box);
       } else {
