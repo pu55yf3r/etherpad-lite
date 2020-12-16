@@ -580,7 +580,33 @@ const paduserlist = (function () {
       if (box.length === 0) {
         // make guest prompt box
         // TODO JM refactor.
-        box = $(`<div id="${padutils.escapeHtml(`guestprompt-${encodedUserId}`)}" class="guestprompt"><div class="choices"><a href="${padutils.escapeHtml(`javascript:void(require(${JSON.stringify(module.id)}).paduserlist.answerGuestPrompt(${JSON.stringify(encodedUserId)},false))`)}">${_('pad.userlist.deny')}</a> <a href="${padutils.escapeHtml(`javascript:void(require(${JSON.stringify(module.id)}).paduserlist.answerGuestPrompt(${JSON.stringify(encodedUserId)},true))`)}">${_('pad.userlist.approve')}</a></div><div class="guestname"><strong>${_('pad.userlist.guest')}:</strong> ${padutils.escapeHtml(displayName)}</div></div>`);
+        const guestPrompt = `<div id="${padutils.escapeHtml(`guestprompt-${encodedUserId}`)}"
+            class="guestprompt">`;
+        box = $(`
+          ${guestPrompt}
+             <div class="choices">
+                <a href="${padutils.escapeHtml(
+      `javascript:void(require(${JSON.stringify(module.id)})
+                      .paduserlist.answerGuestPrompt(${JSON.stringify(encodedUserId)},false))`
+  )}">
+                  ${_('pad.userlist.deny')}
+                </a>
+                <a href="${padutils.escapeHtml(
+      `javascript:void(require(${JSON.stringify(module.id)})
+                    .paduserlist
+                    .answerGuestPrompt(
+                      ${JSON.stringify(encodedUserId)},true))`
+  )}">
+                    ${_('pad.userlist.approve')}
+                </a>
+              </div>
+              <div class="guestname">
+              <strong>${_('pad.userlist.guest')}:</strong>
+              ${padutils.escapeHtml(displayName)
+  }
+              </div>
+        </div>
+        `);
         $('#guestprompts').append(box);
       } else {
         // update display name
